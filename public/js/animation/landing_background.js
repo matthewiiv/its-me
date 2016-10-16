@@ -1,12 +1,12 @@
 
 
 var camera, tick = 0,
-  scene, renderer, clock = new THREE.Clock(true),
+  scene, landingRenderer, clock = new THREE.Clock(true),
   controls, container, gui = new dat.GUI(),
   options, spawnerOptions, particleSystem;
-init();
-animate();
-function init() {
+landingInit();
+landingAnimate();
+function landingInit() {
   const landingBackground = document.getElementById('landing-background');
   camera = new THREE.PerspectiveCamera(28, window.innerWidth / window.innerHeight, 1, 10000);
   camera.position.z = 100;
@@ -16,47 +16,48 @@ function init() {
   // relative to the position of the particle system, but you will probably only need one
   // system for your whole scene
   particleSystem = new THREE.GPUParticleSystem({
-    maxParticles: 250000
+    maxParticles: 1000000
   });
-  scene.add( particleSystem);
+  scene.add(particleSystem);
   // options passed during each spawned
   options = {
+    containerCount: 1,
     position: new THREE.Vector3(),
     positionRandomness: .3,
     velocity: new THREE.Vector3(),
     velocityRandomness: .5,
-    color: 0xaa88ff,
-    colorRandomness: .2,
-    turbulence: .5,
-    lifetime: 2,
-    size: 5,
+    color: 0x000000,
+    colorRandomness: .0,
+    turbulence: 1.5,
+    lifetime: 25,
+    size: 3.5,
     sizeRandomness: 1
   };
   spawnerOptions = {
     spawnRate: 15000,
-    horizontalSpeed: 1.5,
-    verticalSpeed: 1.33,
+    horizontalSpeed: 1,
+    verticalSpeed: 0.9,
     timeScale: 1
   }
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize($('#portfolio-wrapper').width(), $('#portfolio-wrapper').height());
-  landingBackground.appendChild(renderer.domElement);
+  landingRenderer = new THREE.WebGLRenderer({alpha: true});
+  landingRenderer.setPixelRatio(window.devicePixelRatio);
+  landingRenderer.setSize($('#header-wrapper').width(), $('#header-wrapper').height());
+  landingBackground.appendChild(landingRenderer.domElement);
   // setup controls
-  controls = new THREE.TrackballControls(camera, renderer.domElement);
+  controls = new THREE.TrackballControls(camera, landingRenderer.domElement);
   controls.rotateSpeed = 5.0;
   controls.zoomSpeed = 2.2;
   controls.panSpeed = 1;
   controls.dynamicDampingFactor = 0.3;
-  window.addEventListener('resize', onWindowResize, false);
+  window.addEventListener('resize', landingOnWindowResize, false);
 }
-function onWindowResize() {
+function landingOnWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  landingRenderer.setSize($('#header-wrapper').width(), $('#header-wrapper').height());
 }
-function animate() {
-  requestAnimationFrame(animate);
+function landingAnimate() {
+  requestAnimationFrame(landingAnimate);
   controls.update();
   var delta = clock.getDelta() * spawnerOptions.timeScale;
   tick += delta;
@@ -72,8 +73,8 @@ function animate() {
     }
   }
   particleSystem.update(tick);
-  render();
+  landingRender();
 }
-function render() {
-  renderer.render(scene, camera);
+function landingRender() {
+  landingRenderer.render(scene, camera);
 }

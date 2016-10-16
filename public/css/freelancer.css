@@ -69,16 +69,25 @@ hr.star-primary:after {
 }
 header {
   text-align: center;
-  background: #18BC9C;
+  background: #fafafa ;
   color: white;
 }
 header .container {
   padding-top: 100px;
   padding-bottom: 50px;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
 }
 header img {
   display: block;
   margin: 0 auto 20px;
+}
+header .intro-text {
+  padding-top: 7em;
+  padding-bottom: 7em; 
 }
 header .intro-text .name {
   display: block;
@@ -86,10 +95,15 @@ header .intro-text .name {
   text-transform: uppercase;
   font-weight: 700;
   font-size: 2em;
+  text-shadow: 2px 2px 3px #000000;
 }
 header .intro-text .skills {
   font-size: 1.25em;
   font-weight: 300;
+  text-shadow: 1px 1px 1px #000000;
+}
+header .container .row .col-lg-12 {
+  padding: 0;
 }
 @media (min-width: 768px) {
   header .container {
@@ -104,7 +118,7 @@ header .intro-text .skills {
   }
 }
 .navbar-custom {
-  background: #2C3E50;
+  background: #4dd0e1;
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
@@ -197,6 +211,19 @@ section.success {
     padding-top: 75px;
   }
 }
+
+#portfolio #info-wrapper {
+  height: 300px
+}
+
+#portfolio .container {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+}
+
 #portfolio .portfolio-item {
   margin: 0 0 15px;
   right: 0;
@@ -505,5 +532,9 @@ fieldset[disabled] .btn-success.active {
 }
 
 #landing-background {
+  position: absolute;
+}
+
+#info-background {
   position: absolute;
 }
