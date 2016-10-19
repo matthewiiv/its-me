@@ -1,8 +1,9 @@
 // once everything is loaded, we run our Three.js stuff.
-
-var cube, rendererInfo, sceneInfo, cameraInfo
+var infoParticleSystem, infoOptions, infoSpawnerOptions, spawnerTick = 0
+var rendererInfo, sceneInfo, cameraInfo
 var infoClock = new THREE.Clock(true)
 var infoTick = 0
+var clickedCircles = [];
 
 const portfolioCircleOptions = {
   size: [30, 25, 45, 35],
@@ -19,8 +20,9 @@ let circles = portfolioCircleOptions.size.map((el, index) => {
 }) 
 
 const starDeath = {
-  time: 1,
-  maxSize: 2,
+  expandTime: 0.6,
+  contractTime: 1,
+  maxSize: 1.4,
   colour: '#ffffff'
 }
 
@@ -31,7 +33,7 @@ function init() {
   const width = $('#info-wrapper').width() * 500 / 844;
 
 
-  cameraInfo = new THREE.PerspectiveCamera(75, aspect, 1, 1000)
+  cameraInfo = new THREE.PerspectiveCamera(75, aspect, 1, 10000)
   rendererInfo = new THREE.WebGLRenderer({alpha: true});
   rendererInfo.setSize($('#info-wrapper').width(), $('#info-wrapper').height());
   $('#info-background').append(rendererInfo.domElement)
@@ -42,6 +44,30 @@ function init() {
     sceneInfo.add(circle)
   })
   cameraInfo.position.z = 100
+
+  infoParticleSystem = new THREE.GPUParticleSystem({
+    maxParticles: 500000
+  });
+  sceneInfo.add(infoParticleSystem)
+  infoOptions = {
+    containerCount: 1,
+    position: new THREE.Vector3(),
+    positionRandomness: .3,
+    velocity: new THREE.Vector3(),
+    velocityRandomness: 2 * Math.PI,
+    color: 0x000000,
+    colorRandomness: .0,
+    turbulence: 0.5,
+    lifetime: 20,
+    size: 3.5,
+    sizeRandomness: 1
+  };
+  infoSpawnerOptions = {
+    spawnRate: 15000,
+    horizontalSpeed: 1,
+    verticalSpeed: 0.9,
+    timeScale: 1
+  } 
   animateInfo();
 
   $('#info-background').children()[0].addEventListener('mousedown', onCanvasMouseDown, false)
@@ -54,7 +80,31 @@ function render() {
 function animateInfo() {
   requestAnimationFrame(animateInfo);
   var delta = infoClock.getDelta();
-  infoTick += delta;
+  spawnerTick += delta;
+  if(spawnerTick < 0) spawnerTick = 0;
+  clickedCircles.map((el) => {
+    let circle = sceneInfo.getObjectByName(el)
+    if (infoTick <= 1) {
+      infoTick += delta / starDeath.expandTime;
+      circle.scale.x = Math.cos(infoTick * Math.PI / 2)
+      circle.scale.y = Math.cos(infoTick * Math.PI / 2)
+    } 
+    if (infoTick > 0.8 && infoTick < 1.3) {
+      circle.scale.x = 0;
+      circle.scale.y = 0;
+      infoTick += delta
+      infoOptions.position.x = circle.position.x;
+      infoOptions.position.y = circle.position.y;
+      infoOptions.position.z = circle.position.z;
+      for (var x = 0; x < infoSpawnerOptions.spawnRate * delta; x++) {
+        // Yep, that's really it.	Spawning particles is super cheap, and once you spawn them, the rest of
+        // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+        infoParticleSystem.spawnParticle(infoOptions);
+      }
+    }
+  })
+
+  infoParticleSystem.update(spawnerTick) 
   render();
 }
 
@@ -75,13 +125,13 @@ var mouse = new THREE.Vector2()
 function getCursorPosition(canvas, event) {
   const rect = canvas.getBoundingClientRect();
   const x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
-  const y = ((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 - 1;
+  const y =  ((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 - 1;
   return {x, y};
 }
 
 function circleClickEvent(circle) {
   //circle.object.material.color.set('#ffffff')
-  console.log(sceneInfo.getObjectByName('circle0'))
+  clickedCircles.push(circle.object.name)
 }
 
 window.onload = init;

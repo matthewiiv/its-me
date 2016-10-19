@@ -16,7 +16,7 @@ function landingInit() {
   // relative to the position of the particle system, but you will probably only need one
   // system for your whole scene
   particleSystem = new THREE.GPUParticleSystem({
-    maxParticles: 1000000
+    maxParticles: 500000
   });
   scene.add(particleSystem);
   // options passed during each spawned
