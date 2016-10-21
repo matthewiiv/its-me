@@ -435,7 +435,7 @@ THREE.GPUParticleContainer = function(maxParticles, particleSystem) {
 		var turbulence = Math.floor(turbulence * 254);
 
 		// clamp our value to between 0. and 1.
-		velX = Math.floor(maxSource * ((velX - -maxVel) / (maxVel - -maxVel)));
+                velX = Math.floor(maxSource * ((velX - -maxVel) / (maxVel - -maxVel)));
 		velY = Math.floor(maxSource * ((velY - -maxVel) / (maxVel - -maxVel)));
 		velZ = Math.floor(maxSource * ((velZ - -maxVel) / (maxVel - -maxVel)));
 

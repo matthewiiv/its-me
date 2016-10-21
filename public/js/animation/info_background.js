@@ -5,6 +5,8 @@ var infoClock = new THREE.Clock(true)
 var infoTick = 0
 var clickedCircles = [];
 
+
+
 const portfolioCircleOptions = {
   size: [30, 25, 45, 35],
   color: ['#000000','#000000','#000000','#000000'],
@@ -26,7 +28,7 @@ const starDeath = {
   colour: '#ffffff'
 }
 
-function init() {
+function infoInit() {
   sceneInfo = new THREE.Scene();
   var aspect = $('#info-wrapper').width() / $('#info-wrapper').height() ;
 
@@ -52,21 +54,18 @@ function init() {
   infoOptions = {
     containerCount: 1,
     position: new THREE.Vector3(),
-    positionRandomness: .3,
+    positionRandomness: 0,
     velocity: new THREE.Vector3(),
-    velocityRandomness: 2 * Math.PI,
+    velocityRandomness: 0,
     color: 0x000000,
     colorRandomness: .0,
-    turbulence: 0.5,
+    turbulence: 0,
     lifetime: 20,
     size: 3.5,
-    sizeRandomness: 1
+    sizeRandomness: 0
   };
   infoSpawnerOptions = {
-    spawnRate: 15000,
-    horizontalSpeed: 1,
-    verticalSpeed: 0.9,
-    timeScale: 1
+    spawnRate: 150000,
   } 
   animateInfo();
 
@@ -76,32 +75,43 @@ function init() {
 function render() {
   rendererInfo.render(sceneInfo, cameraInfo)
 }
-
+let test= 1
 function animateInfo() {
   requestAnimationFrame(animateInfo);
-  var delta = infoClock.getDelta();
+  const delta = infoClock.getDelta();
   spawnerTick += delta;
-  if(spawnerTick < 0) spawnerTick = 0;
+
+  if (spawnerTick < 0) spawnerTick = 0;
   clickedCircles.map((el) => {
+
     let circle = sceneInfo.getObjectByName(el)
     if (infoTick <= 1) {
       infoTick += delta / starDeath.expandTime;
       circle.scale.x = Math.cos(infoTick * Math.PI / 2)
       circle.scale.y = Math.cos(infoTick * Math.PI / 2)
     } 
-    if (infoTick > 0.8 && infoTick < 1.3) {
+    if (infoTick > 1) {
       circle.scale.x = 0;
       circle.scale.y = 0;
+    0}
+    if (/*infoTick > 0.8 && infoTick < 1.3*/test === 1) {
+      test = 0
       infoTick += delta
       infoOptions.position.x = circle.position.x;
       infoOptions.position.y = circle.position.y;
       infoOptions.position.z = circle.position.z;
-      for (var x = 0; x < infoSpawnerOptions.spawnRate * delta; x++) {
+      for (var x = 0; x < 1000; x++) {
         // Yep, that's really it.	Spawning particles is super cheap, and once you spawn them, the rest of
         // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
+        const theta = Math.random() * 2 * Math.PI;
+        let rand = Math.random();
+        infoOptions.velocity.x = rand * Math.sin(theta);
+        infoOptions.velocity.y = rand * Math.cos(theta);
+        infoOptions.velocity.z = 0;
         infoParticleSystem.spawnParticle(infoOptions);
       }
     }
+
   })
 
   infoParticleSystem.update(spawnerTick) 
@@ -134,4 +144,4 @@ function circleClickEvent(circle) {
   clickedCircles.push(circle.object.name)
 }
 
-window.onload = init;
+window.onload = infoInit;
