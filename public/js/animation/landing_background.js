@@ -2,7 +2,7 @@
 
 var camera, tick = 0,
   scene, landingRenderer, clock = new THREE.Clock(true),
-  controls, container, gui = new dat.GUI(),
+  container, gui = new dat.GUI(),
   options, spawnerOptions, particleSystem;
 landingInit();
 landingAnimate();
@@ -26,7 +26,7 @@ function landingInit() {
     positionRandomness: .3,
     velocity: new THREE.Vector3(),
     velocityRandomness: .5,
-    color: 0x000000,
+    color: 0xffffff,
     colorRandomness: .0,
     turbulence: 1.5,
     lifetime: 25,
@@ -44,11 +44,6 @@ function landingInit() {
   landingRenderer.setSize($('#header-wrapper').width(), $('#header-wrapper').height());
   landingBackground.appendChild(landingRenderer.domElement);
   // setup controls
-  controls = new THREE.TrackballControls(camera, landingRenderer.domElement);
-  controls.rotateSpeed = 5.0;
-  controls.zoomSpeed = 2.2;
-  controls.panSpeed = 1;
-  controls.dynamicDampingFactor = 0.3;
   window.addEventListener('resize', landingOnWindowResize, false);
 }
 function landingOnWindowResize() {
@@ -58,7 +53,6 @@ function landingOnWindowResize() {
 }
 function landingAnimate() {
   requestAnimationFrame(landingAnimate);
-  controls.update();
   var delta = clock.getDelta() * spawnerOptions.timeScale;
   tick += delta;
   if (tick < 0) tick = 0;
