@@ -4,7 +4,7 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
 body {
-  font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Khula', 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   overflow-x: hidden;
 }
 p {
@@ -146,7 +146,7 @@ header .container .row .col-lg-12 {
   color: white;
 }
 .navbar-custom .navbar-nav li a:hover {
-  color: #90A4AE;
+  color: #3e678a;
   outline: none;
 }
 .navbar-custom .navbar-nav li a:focus,
@@ -155,13 +155,13 @@ header .container .row .col-lg-12 {
 }
 .navbar-custom .navbar-nav li.active a {
   color: white;
-  background: #90A4AE;
+  background: #3E678A;
 }
 .navbar-custom .navbar-nav li.active a:hover,
 .navbar-custom .navbar-nav li.active a:focus,
 .navbar-custom .navbar-nav li.active a:active {
   color: white;
-  background: #90A4AE;
+  background: #3E678A;
 }
 .navbar-custom .navbar-toggle {
   color: white;
@@ -171,9 +171,9 @@ header .container .row .col-lg-12 {
 }
 .navbar-custom .navbar-toggle:hover,
 .navbar-custom .navbar-toggle:focus {
-  background-color: #90A4AE;
+  background-color: #3E678A;
   color: white;
-  border-color: #90A4AE;
+  border-color: #3E678A;
 }
 @media (min-width: 768px) {
   .navbar-custom {
@@ -322,7 +322,7 @@ form .row:first-child .floating-label-form-group {
 }
 
 #about {
-  background: #90a4ae;
+  background: #3e678a;
   color: white;
 }
 
@@ -342,7 +342,7 @@ footer h3 {
 }
 footer .footer-above {
   padding-top: 50px;
-  background-color: #e0e0e0;
+  background-color: #718ea9;
 }
 footer .footer-col {
   margin-bottom: 50px;
