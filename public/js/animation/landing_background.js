@@ -1,74 +1,82 @@
+var camera, scene, renderer,
+    geometry, material, mesh;
+
+init();
+animate();
+
+function init() {
+
+    clock = new THREE.Clock();
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    scene = new THREE.Scene();
+    // scene.background = new THREE.Color( 0xff0000 );
+
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera.position.z = 1000;
+    scene.add( camera );
+
+    geometry = new THREE.CubeGeometry( 200, 200, 200 );
+    material = new THREE.MeshLambertMaterial( { color: 0xaa6666, wireframe: false } );
+    mesh = new THREE.Mesh( geometry, material );
+    //scene.add( mesh );
+    cubeSineDriver = 0;
+
+    textGeo = new THREE.PlaneGeometry(300,300);
+    THREE.ImageUtils.crossOrigin = ''; //Need this to pull in crossdomain images from AWS
+    textTexture = THREE.ImageUtils.loadTexture('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/quickText.png');
+    textMaterial = new THREE.MeshLambertMaterial({color: 0x00ffff, opacity: 1, map: textTexture, transparent: true, blending: THREE.AdditiveBlending})
+    text = new THREE.Mesh(textGeo,textMaterial);
+    text.position.z = 800;
+    // scene.add(text);
+
+    light = new THREE.DirectionalLight(0xffffff,0.5);
+    light.position.set(-1,0,1);
+    scene.add(light);
+
+    smokeTexture = THREE.ImageUtils.loadTexture('https://s3-us-west-2.amazonaws.com/s.cdpn.io/95637/Smoke-Element.png');
+    smokeMaterial = new THREE.MeshLambertMaterial({color: 0x32CD32, map: smokeTexture, transparent: true});
+    smokeGeo = new THREE.PlaneGeometry(300,300);
+    smokeParticles = [];
 
 
-var camera, tick = 0,
-  scene, landingRenderer, clock = new THREE.Clock(true),
-  container, gui = new dat.GUI(),
-  options, spawnerOptions, particleSystem;
-landingInit();
-landingAnimate();
-function landingInit() {
-  const landingBackground = document.getElementById('landing-background');
-  camera = new THREE.PerspectiveCamera(28, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.z = 100;
-  scene = new THREE.Scene();
-  // The GPU Particle system extends THREE.Object3D, and so you can use it
-  // as you would any other scene graph component.	Particle positions will be
-  // relative to the position of the particle system, but you will probably only need one
-  // system for your whole scene
-  particleSystem = new THREE.GPUParticleSystem({
-    maxParticles: 500000
-  });
-  scene.add(particleSystem);
-  // options passed during each spawned
-  options = {
-    containerCount: 1,
-    position: new THREE.Vector3(),
-    positionRandomness: .3,
-    velocity: new THREE.Vector3(),
-    velocityRandomness: .5,
-    color: 0xffffff,
-    colorRandomness: .0,
-    turbulence: 1.5,
-    lifetime: 25,
-    size: 3.5,
-    sizeRandomness: 1
-  };
-  spawnerOptions = {
-    spawnRate: 15000,
-    horizontalSpeed: 1,
-    verticalSpeed: 0.9,
-    timeScale: 1
-  }
-  landingRenderer = new THREE.WebGLRenderer({alpha: true});
-  landingRenderer.setPixelRatio(window.devicePixelRatio);
-  landingRenderer.setSize($('#header-wrapper').width(), $('#header-wrapper').height());
-  landingBackground.appendChild(landingRenderer.domElement);
-  // setup controls
-  window.addEventListener('resize', landingOnWindowResize, false);
-}
-function landingOnWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  landingRenderer.setSize($('#header-wrapper').width(), $('#header-wrapper').height());
-}
-function landingAnimate() {
-  requestAnimationFrame(landingAnimate);
-  var delta = clock.getDelta() * spawnerOptions.timeScale;
-  tick += delta;
-  if (tick < 0) tick = 0;
-  if (delta > 0) {
-    options.position.x = Math.sin(tick * spawnerOptions.horizontalSpeed) * 20;
-    options.position.y = Math.sin(tick * spawnerOptions.verticalSpeed) * 10;
-    options.position.z = Math.sin(tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed) * 5;
-    for (var x = 0; x < spawnerOptions.spawnRate * delta; x++) {
-      // Yep, that's really it.	Spawning particles is super cheap, and once you spawn them, the rest of
-      // their lifecycle is handled entirely on the GPU, driven by a time uniform updated below
-      particleSystem.spawnParticle(options);
+    for (p = 0; p < 150; p++) {
+        var particle = new THREE.Mesh(smokeGeo,smokeMaterial);
+        particle.position.set(Math.random()*500-250,Math.random()*500-250,Math.random()*1000-100);
+        particle.rotation.z = Math.random() * 360;
+        scene.add(particle);
+        smokeParticles.push(particle);
     }
-  }
-  particleSystem.update(tick);
-  landingRender();
+
+  renderer.domElement.id = 'landing-canvas'
+  document.getElementById('header-wrapper').appendChild( renderer.domElement );
+
 }
-function landingRender() {
-  landingRenderer.render(scene, camera);
+
+function animate() {
+
+    // note: three.js includes requestAnimationFrame shim
+    delta = clock.getDelta();
+    requestAnimationFrame( animate );
+    evolveSmoke();
+    render();
+}
+
+function evolveSmoke() {
+    var sp = smokeParticles.length;
+    while(sp--) {
+        smokeParticles[sp].rotation.z += (delta * 0.2);
+    }
+}
+
+function render() {
+
+    mesh.rotation.x += 0.005;
+    mesh.rotation.y += 0.01;
+    cubeSineDriver += .01;
+    mesh.position.z = 100 + (Math.sin(cubeSineDriver) * 500);
+    renderer.render( scene, camera );
+
 }

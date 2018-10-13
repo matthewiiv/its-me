@@ -71,7 +71,7 @@ hr.star-primary:after {
 }
 header {
   text-align: center;
-  background-image: url('../img/background.jpg');
+  /* background-image: url('../img/background.jpg'); */
   background-size: 100vw 100vh;
   color: white;
 }
@@ -90,7 +90,7 @@ header img {
 }
 header .intro-text {
   padding-top: 7em;
-  padding-bottom: 7em; 
+  padding-bottom: 7em;
 }
 header .intro-text .name {
   display: block;
@@ -213,6 +213,11 @@ section.success {
   section.first {
     padding-top: 75px;
   }
+}
+
+#introduction {
+  background: #00171f;
+  color: white;
 }
 
 #portfolio {
@@ -546,6 +551,13 @@ fieldset[disabled] .btn-success.active {
 
 #landing-background {
   position: absolute;
+}
+
+canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1000;
 }
 
 #info-background {

@@ -18,8 +18,8 @@ let circles = portfolioCircleOptions.size.map((el, index) => {
   const material = new THREE.MeshBasicMaterial({
     color: portfolioCircleOptions.color[index],
   });
-  return new THREE.Mesh(geometry, material) 
-}) 
+  return new THREE.Mesh(geometry, material)
+})
 
 const starDeath = {
   expandTime: 0.6,
@@ -41,7 +41,7 @@ function infoInit() {
   $('#info-background').append(rendererInfo.domElement)
   circles.map((circle, index) => {
     circle.position.x = ((width / 5) * (index + 1)) - (width / 2)
-    portfolioCircleOptions.position.push(circle.position) 
+    portfolioCircleOptions.position.push(circle.position)
     circle.name = 'circle' + [index]
     sceneInfo.add(circle)
   })
@@ -66,7 +66,7 @@ function infoInit() {
   };
   infoSpawnerOptions = {
     spawnRate: 150000,
-  } 
+  }
   animateInfo();
 
   $('#info-background').children()[0].addEventListener('mousedown', onCanvasMouseDown, false)
@@ -89,7 +89,7 @@ function animateInfo() {
       infoTick += delta / starDeath.expandTime;
       circle.scale.x = Math.cos(infoTick * Math.PI / 2)
       circle.scale.y = Math.cos(infoTick * Math.PI / 2)
-    } 
+    }
     if (infoTick > 1) {
       circle.scale.x = 0;
       circle.scale.y = 0;
@@ -114,7 +114,7 @@ function animateInfo() {
 
   })
 
-  infoParticleSystem.update(spawnerTick) 
+  infoParticleSystem.update(spawnerTick)
   render();
 }
 
